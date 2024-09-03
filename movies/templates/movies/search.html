@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommender</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'movies/style.css' %}">
+</head>
+<body>
+    <div class="navbar">
+        Movie Recommendation
+    </div>
+
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Search</button>
+        </form>
+
+        {% if results %}
+            <div class="results">
+                {% for movie, similarity in results %}
+                    <div class="movie-item" onclick="toggleDetails('{{ movie.id }}')">
+                        <strong>{{ movie.title }}</strong>
+                        <div id="details-{{ movie.id }}" class="movie-details">
+                            <p>Description: {{ movie.description }}</p>
+                            <p>Genre: {{ movie.genres }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function toggleDetails(movieId) {
+            var details = document.getElementById('details-' + movieId);
+            if (details.style.display === 'none' || details.style.display === '') {
+                details.style.display = 'block';
+            } else {
+                details.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
